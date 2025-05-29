@@ -7,6 +7,15 @@ public class TataLogoutTest {
 
  private WebDriver driver;
 
+ @Testimport org.openqa.selenium.WebDriver;
+import org.openqa.selenium.By;
+import org.testng.annotations.Test;
+import io.cucumber.java.en.When;
+
+public class TataLogoutTest {
+
+ private WebDriver driver;
+
  @Test
  public void logoutFromTata() {
  // Navigate to the Tata application
@@ -19,6 +28,12 @@ public class TataLogoutTest {
  String currentUrl = driver.getCurrentUrl();
  assert currentUrl.equals("https://www.tata.com/login");
  }
+
+ @When("user logs out from Tata")
+ public void userLogsOutFromTata() {
+ logoutFromTata();
+ }
+}
 
  @When("user logs out from Tata")
  public void userLogsOutFromTata() {
