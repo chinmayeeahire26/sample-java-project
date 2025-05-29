@@ -8,6 +8,16 @@ import org.testng.annotations.Test;
 
 public class JioLoginTest {
 
+    @Testpackage com.jio.tests;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+public class JioLoginTest {
+
     @Test
     public void loginToJio() {
         System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
@@ -27,4 +37,5 @@ public class JioLoginTest {
 
         driver.quit();
     }
+}
 }
