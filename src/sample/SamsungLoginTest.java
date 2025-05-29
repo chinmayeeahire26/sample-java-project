@@ -6,6 +6,14 @@ import org.testng.annotations.Test;
 
 public class SamsungLoginTest {
 
+    @Testimport org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+public class SamsungLoginTest {
+
     @Test
     public void loginToSamsung() {
         System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
@@ -25,5 +33,7 @@ public class SamsungLoginTest {
 
         driver.quit();
     }
+
+}
 
 }
