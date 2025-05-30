@@ -17,6 +17,25 @@ public class MyntraLoginTest {
         driver.manage().window().maximize();
     }
 
+    @Testimport org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+public class MyntraLoginTest {
+
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
     @Test
     public void loginToMyntra() {
         driver.get("https://www.myntra.com/login");
@@ -32,6 +51,14 @@ public class MyntraLoginTest {
         WebElement accountName = driver.findElement(By.id("accountName"));
         Assert.assertEquals("Test User", accountName.getText());
     }
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
 
     @After
     public void tearDown() {
