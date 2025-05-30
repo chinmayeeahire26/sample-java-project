@@ -3,6 +3,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+public class OrangeHRMLoginTest {import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class OrangeHRMLoginTest {
 
     public void loginToOrangeHRM() {
@@ -36,4 +41,5 @@ public class OrangeHRMLoginTest {
             driver.quit();
         }
     }
+}
 }
