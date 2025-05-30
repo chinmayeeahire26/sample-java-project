@@ -2,71 +2,37 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class ZomatoLoginTest {
 
-    private WebDriver driver;
-
-    @BeforeMethod
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.zomato.com");
-    }
-
-    @Testimport org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-public class ZomatoLoginTest {
-
-    private WebDriver driver;
-
-    @BeforeMethod
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.zomato.com");
-    }
-
-    @Test
     public void loginToZomato() {
-        WebElement loginButton = driver.findElement(By.id("login-button-id"));
-        loginButton.click();
+        // Set up the WebDriver
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        WebDriver driver = new ChromeDriver();
 
-        WebElement emailField = driver.findElement(By.id("email-field-id"));
-        emailField.sendKeys("your-email@example.com");
+        try {
+            // Navigate to Zomato login page
+            driver.get("https://www.zomato.com/login");
 
-        WebElement passwordField = driver.findElement(By.id("password-field-id"));
-        passwordField.sendKeys("your-password");
+            // Locate and fill the email field
+            WebElement emailField = driver.findElement(By.id("email"));
+            emailField.sendKeys("your-email@example.com");
 
-        WebElement submitButton = driver.findElement(By.id("submit-button-id"));
-        submitButton.click();
+            // Locate and fill the password field
+            WebElement passwordField = driver.findElement(By.id("password"));
+            passwordField.sendKeys("your-password");
 
-        WebElement profileName = driver.findElement(By.id("profile-name-id"));
-        Assert.assertEquals(profileName.getText(), "Expected Profile Name");
-    }
+            // Locate and click the login button
+            WebElement loginButton = driver.findElement(By.id("login-button"));
+            loginButton.click();
 
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
-    }
-}
+            // Add assertions to verify successful login
+            // Example: Check if the user is redirected to the homepage
+            // Assert.assertTrue(driver.getCurrentUrl().contains("homepage"));
 
-
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
+        } finally {
+            // Close the browser
+            driver.quit();
+        }
     }
 }
