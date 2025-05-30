@@ -3,6 +3,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+public class LoginTest {import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class LoginTest {
 
     public void loginToApplication() {
@@ -23,4 +28,5 @@ public class LoginTest {
 
         driver.quit();
     }
+}
 }
