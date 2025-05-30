@@ -3,6 +3,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+public class RapidoLoginTest {import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class RapidoLoginTest {
 
     public void logInToRapido() {
@@ -36,4 +41,5 @@ public class RapidoLoginTest {
             driver.quit();
         }
     }
+}
 }
