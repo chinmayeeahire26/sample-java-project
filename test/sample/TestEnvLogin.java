@@ -3,6 +3,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+public class TestEnvLogin {import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class TestEnvLogin {
 
     public void loginToTestEnv() {
@@ -32,4 +37,5 @@ public class TestEnvLogin {
         // Close the browser
         driver.quit();
     }
+}
 }
