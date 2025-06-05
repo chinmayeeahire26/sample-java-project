@@ -1,5 +1,4 @@
 public class MyClass5 {
-
     public void myMethod() {
         String message = getGreetingMessage();
         System.out.println(message);
@@ -8,14 +7,10 @@ public class MyClass5 {
     }
 
     public String getGreetingMessage() {
-        return buildGreeting();
+        return "hello github";
     }
 
     private String getGoodbyeMessage() {
         return "goodbye github";
-    }
-
-    private String buildGreeting() {
-        return "hello github";
     }
 }
