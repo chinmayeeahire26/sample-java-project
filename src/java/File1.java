@@ -1,1 +1,14 @@
-public class File1 { public String methodA() { return "old A"; } public String methodX() { return "something else"; } }
+public class File1 {
+
+    public String methodA() {
+        return helperX();
+    }
+
+    public String methodX() {
+        return "something else";
+    }
+
+    private String helperX() {
+        return "from X new";
+    }
+}
