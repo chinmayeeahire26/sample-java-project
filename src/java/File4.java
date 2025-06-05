@@ -1,9 +1,14 @@
 public class File4 {
+
     public String methodA() {
-        return "old A";
+        return helperX();
     }
- 
+
     public String methodX() {
         return "something else";
+    }
+
+    private String helperX() {
+        return "from X new2";
     }
 }
