@@ -1,1 +1,6 @@
-public class File2 { public String methodB() { return "old B"; } }
+public class File2 {
+
+    public String methodB() {
+        return "from B new";
+    }
+}
