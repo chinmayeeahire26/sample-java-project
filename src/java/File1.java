@@ -1,1 +1,1 @@
-public class File1 { public String methodA() { return "old A"; } public String methodX() { return "something else"; } }
+public class File2 { public String methodB() { return "old B"; } }
