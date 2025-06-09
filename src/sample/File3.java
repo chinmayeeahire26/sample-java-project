@@ -1,7 +1,7 @@
 public class File3 {
 
     public String methodB() {
-        return "new2";
+        return "new23";
     }
 
     private String helperC() {
