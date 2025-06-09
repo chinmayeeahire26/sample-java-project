@@ -8,7 +8,11 @@ public class File5 {
         return "something else";
     }
 
-    private String helperX() {
-        return "from X new1";
+    public String helperX() {
+        return helpnew();
+    }
+
+    private String helpnew() {
+        return "new2";
     }
 }
