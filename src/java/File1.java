@@ -9,6 +9,6 @@ public class File1 {
     }
 
     private String helperX() {
-        return "from X new2";
+        return "from X new1";
     }
 }
