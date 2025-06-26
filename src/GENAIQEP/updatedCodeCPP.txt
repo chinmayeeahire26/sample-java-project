@@ -1,0 +1,14 @@
+int methodA() {
+    return helperX();
+}
+
+int helperX() {
+    return 42;
+}
+
+int methodB() {
+    return helperY();
+}
+
+int helperY() {
+    return 84;
