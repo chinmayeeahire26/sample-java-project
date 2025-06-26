@@ -1,0 +1,5 @@
+def method_b():
+    return "old B"
+
+def helper_b():
+    return "updated from helper B"
