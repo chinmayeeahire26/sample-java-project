@@ -1,0 +1,3 @@
+public String methodA() { return helperX(); }
+private String helperX() { return "from X new1"; }
+public String methodB() { return "from B new1"; }
