@@ -1,0 +1,11 @@
+function methodA() { return helperX(); }
+
+function helperX() { return "from X new"; }
+
+function methodB() { return helperY(); }
+
+function helperY() { return "from Y new"; }
+
+function methodC() { return helperZ(); }
+
+function helperZ() { return "from Z new"; }
