@@ -1,0 +1,1 @@
+public class FileNEW3 { public String methodC() { return "NEW old C"; } }
