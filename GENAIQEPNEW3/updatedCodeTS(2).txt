@@ -1,0 +1,15 @@
+function methodA(): string {
+    return helperX();
+}
+
+function helperX(): string {
+    return "from helper X";
+}
+
+function methodB(): number {
+    return helperY();
+}
+
+function helperY(): number {
+    return 100;
+}
