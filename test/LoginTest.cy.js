@@ -1,0 +1,9 @@
+describe('Login Test Suite', () => {
+  it('should successfully log in with valid credentials', () => {
+    cy.visit('/login');
+    cy.get('#username').type('validUser');
+    cy.get('#password').type('validPassword');
+    cy.get('#loginButton').click();
+    cy.url().should('include', '/dashboard');
+  });
+});
