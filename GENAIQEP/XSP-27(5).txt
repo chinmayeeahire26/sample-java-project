@@ -1,0 +1,55 @@
+{
+  "Defect Analysis": {
+    "Defects": [
+      {
+        "Feature": "Login Functionality",
+        "Defects": ["D001", "D002"],
+        "Feature Sentiment": "Negative",
+        "Sentiment Score": -0.7,
+        "Impact Analysis": {
+          "Impact": "Critical",
+          "Reason": "Users are unable to log in, causing a complete halt in access to the application."
+        }
+      },
+      {
+        "Feature": "Payment Gateway",
+        "Defects": ["D003", "D004"],
+        "Feature Sentiment": "Negative",
+        "Sentiment Score": -0.6,
+        "Impact Analysis": {
+          "Impact": "High",
+          "Reason": "Payment failures lead to loss of sales and customer trust."
+        }
+      },
+      {
+        "Feature": "User Profile Management",
+        "Defects": ["D005"],
+        "Feature Sentiment": "Neutral",
+        "Sentiment Score": 0.0,
+        "Impact Analysis": {
+          "Impact": "Medium",
+          "Reason": "Minor issues with profile updates, but not affecting overall functionality."
+        }
+      },
+      {
+        "Feature": "Search Functionality",
+        "Defects": ["D006"],
+        "Feature Sentiment": "Positive",
+        "Sentiment Score": 0.8,
+        "Impact Analysis": {
+          "Impact": "Low",
+          "Reason": "Search results are accurate and fast, enhancing user experience."
+        }
+      }
+    ]
+  },
+  "Insights Based on Sentiment Analysis": {
+    "Performing Areas": "Search Functionality is performing well with a positive sentiment score.",
+    "Patterns of Frustration or Satisfaction": "Users express frustration with the Login Functionality and Payment Gateway.",
+    "Feature Priority": "Login Functionality and Payment Gateway need immediate attention due to critical and high impact.",
+    "Trends": "The trend shows increasing dissatisfaction with payment processing, as seen in defects D003 and D004.",
+    "Performance/Security Concerns": "Defects D001 and D003 are performance sensitive, affecting user access and transaction security.",
+    "Response Time for negative areas": "Response time for closed defects related to negative sentiment is currently under review.",
+    "Identify Sentiment Trends Over Time": "Overall sentiment is declining, particularly in critical features like Login and Payment."
+  }
+}
