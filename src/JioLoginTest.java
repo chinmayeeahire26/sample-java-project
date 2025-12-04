@@ -1,41 +1,33 @@
-package com.jio.tests;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.Test;
-
-public class JioLoginTest {
-
-    @Testpackage com.jio.tests;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.Test;
-
-public class JioLoginTest {
-
-    @Test
-    public void loginToJio() {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+public class FlipkartLoginTest {
+    public void loginToFlipkart() {
+        // Set up WebDriver
         WebDriver driver = new ChromeDriver();
-        driver.get("https://www.jio.com/login");
+        driver.get("https://www.flipkart.com");
 
-        WebElement usernameField = driver.findElement(By.id("username"));
-        WebElement passwordField = driver.findElement(By.id("password"));
-        WebElement loginButton = driver.findElement(By.id("loginButton"));
+        // Close the login popup if it appears
+        try {
+            WebElement closeButton = driver.findElement(By.xpath("//button[text()='✕']"));
+            closeButton.click();
+        } catch (NoSuchElementException e) {
+            // No popup appeared, continue
+        }
 
-        usernameField.sendKeys("yourUsername");
-        passwordField.sendKeys("yourPassword");
+        // Locate and fill in the username
+        WebElement usernameField = driver.findElement(By.xpath("//input[@class='_2IX_2- VJZDxU']"));
+        usernameField.sendKeys("your_username");
+
+        // Locate and fill in the password
+        WebElement passwordField = driver.findElement(By.xpath("//input[@type='password']"));
+        passwordField.sendKeys("your_password");
+
+        // Click the login button
+        WebElement loginButton = driver.findElement(By.xpath("//button[@type='submit']"));
         loginButton.click();
 
-        // Add assertions to verify successful login
-        // Example: Assert.assertTrue(driver.findElement(By.id("welcomeMessage")).isDisplayed());
+        // Add assertions to verify login success
+        // Example: Assert.assertTrue(driver.getTitle().contains("Flipkart"));
 
+        // Clean up
         driver.quit();
     }
-}
 }
