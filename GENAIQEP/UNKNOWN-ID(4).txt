@@ -1,0 +1,1 @@
+To assist you effectively, I'll need the details for the Open Bug, the Root Cause Analysis (RCA), and the corresponding source code of the application. Please provide these details so I can analyze and identify a fix for the defect.
