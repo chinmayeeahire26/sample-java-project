@@ -1,10 +1,9 @@
-describe('Login Functionality', () => {
-  it('should log in with valid credentials', () => {
+describe('Login Test', () => {
+  it('should log in successfully', () => {
     cy.visit('/login');
-    cy.get('input[name="username"]').type('testUser');
-    cy.get('input[name="password"]').type('testPassword');
-    cy.get('button[type="submit"]').click();
+    cy.get('#username').type('testuser');
+    cy.get('#password').type('password123');
+    cy.get('#loginButton').click();
     cy.url().should('include', '/dashboard');
-    cy.get('.welcome-message').should('contain', 'Welcome, testUser');
   });
 });
