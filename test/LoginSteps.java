@@ -1,3 +1,9 @@
-public void the_user_is_on_the_login_page() {
-    driver.get("https://example.com/login");
-}
+describe('Login Test', () => {
+  it('should log in with valid credentials', () => {
+    cy.visit('/login');
+    cy.get('#username').type('validUser');
+    cy.get('#password').type('validPassword');
+    cy.get('#loginButton').click();
+    cy.url().should('include', '/dashboard');
+  });
+});
