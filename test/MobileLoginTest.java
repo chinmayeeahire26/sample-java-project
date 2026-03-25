@@ -1,15 +1,10 @@
-public class AjioLoginTest {
-    public void loginUser() {
-        // Navigate to login page
-        driver.get("https://www.ajio.com/login");
-        // Enter username
-        driver.findElement(By.id("username")).sendKeys("testuser");
-        // Enter password
-        driver.findElement(By.id("password")).sendKeys("password123");
-        // Click login button
-        driver.findElement(By.id("loginButton")).click();
-        // Verify login success
-        String expectedUrl = "https://www.ajio.com/home";
-        Assert.assertEquals(driver.getCurrentUrl(), expectedUrl);
-    }
-}
+describe('User Login Tests', () => {
+  it('should log in the user successfully', () => {
+    cy.visit('/login');
+    cy.get('input[name="username"]').type('testUser');
+    cy.get('input[name="password"]').type('testPassword');
+    cy.get('button[type="submit"]').click();
+    cy.url().should('include', '/dashboard');
+    cy.get('.welcome-message').should('contain', 'Welcome, testUser');
+  });
+});
