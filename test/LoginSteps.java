@@ -1,5 +1,5 @@
 describe('User Login Tests', () => {
-  it('should log in with valid credentials', () => {
+  it('should log in a user with valid credentials', () => {
     cy.visit('/login');
     cy.get('input[name="username"]').type('testUser');
     cy.get('input[name="password"]').type('testPassword');
