@@ -1,0 +1,65 @@
+1) Description on code fix:  
+The fix introduces explicit validation of the work item ID before attempting to upload test data to Jira ALM. This prevents the upload process from proceeding with invalid input and allows the UI to display a clear, specific error message "Please provide the valid work item Id" instead of a generic "Error". The error handling in the upload process is also enhanced to detect backend validation errors and display the appropriate message. This directly addresses the root cause identified in the RCA: incorrect message handling and generic snack bar messages for invalid work item IDs, thereby improving user experience and clarity.
+
+2) Code fix:  
+Existing Code:  
+typescript
+// TestDataGeneratorComponent.ts (simplified snippet)
+uploadToJiraALM() {
+  this.jiraService.uploadTestData(this.testData, this.workItemId)
+    .subscribe(
+      response => {
+        this.snackBarService.showSuccess("Upload successful");
+      },
+      error => {
+        this.snackBarService.showError("Error"); // Generic error message
+      }
+    );
+}
+
+
+New Code with Fix:  
+typescript
+// TestDataGeneratorComponent.ts (simplified snippet with fix)
+uploadToJiraALM() {
+  // Validate work item ID before upload
+  if (!this.isValidWorkItemId(this.workItemId)) {
+    this.snackBarService.showError("Please provide the valid work item Id"); // Specific validation message
+    return; // Prevent upload attempt
+  }
+
+  this.jiraService.uploadTestData(this.testData, this.workItemId)
+    .subscribe(
+      response => {
+        this.snackBarService.showSuccess("Upload successful");
+      },
+      error => {
+        // Check if error is related to invalid work item ID from backend (optional)
+        if (error && error.message && error.message.includes("invalid work item id")) {
+          this.snackBarService.showError("Please provide the valid work item Id");
+        } else {
+          this.snackBarService.showError("Error"); // Fallback generic error
+        }
+      }
+    );
+}
+
+// Add a helper method for validation
+isValidWorkItemId(workItemId: string): boolean {
+  // Example validation: non-empty, alphanumeric with optional dashes
+  const workItemIdPattern = /^[A-Za-z0-9-]+$/; // Adjust pattern as per requirements
+  return workItemId != null && workItemId.trim() !== "" && workItemIdPattern.test(workItemId);
+}
+
+
+Changes Made:  
+- Added `isValidWorkItemId()` helper method for input validation.  
+- Added pre-upload validation check in `uploadToJiraALM()`.  
+- Updated snack bar error messages to show specific validation message when invalid input is detected.  
+- Enhanced error callback to map backend validation errors to user-friendly messages.
+
+3) Other Relevant details:  
+- Add unit and UI tests to cover validation logic and snack bar message correctness.  
+- No configuration changes needed unless validation rules evolve.  
+- Update documentation to reflect validation requirements and error messaging behavior.  
+- Consider backend error code usage for more robust error handling in future improvements.
