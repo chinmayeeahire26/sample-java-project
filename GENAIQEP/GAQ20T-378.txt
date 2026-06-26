@@ -1,0 +1,51 @@
+Sure, let's analyze the RCA and identify the code fix. 
+
+### Description on Code Fix:
+The issue is due to either a misconfiguration in the API or incorrect data mapping in the code, or the data is not properly initialized or retrieved from the database. We need to ensure that the `embeddingmodel` and `embeddingmodelName` are correctly fetched and initialized from the database.
+
+### Code Fix:
+Below is an example of how the code might be fixed. This example assumes that the data is fetched from a database and the issue lies in the retrieval or initialization process.
+
+#### Before Fix:
+```java
+public class SolutionService {
+
+    public Solution getSolutionById(int solutionId) {
+        Solution solution = solutionRepository.findById(solutionId);
+        
+        // Assume this is where the embedding model and name should be set
+        solution.setEmbeddingModel(null); // Incorrect initialization
+        solution.setEmbeddingModelName(null); // Incorrect initialization
+        
+        return solution;
+    }
+}
+```
+
+#### After Fix:
+```java
+public class SolutionService {
+
+    public Solution getSolutionById(int solutionId) {
+        Solution solution = solutionRepository.findById(solutionId);
+        
+        // Correctly fetch the embedding model and name from the database
+        EmbeddingModel embeddingModel = embeddingModelRepository.findBySolutionId(solutionId);
+        if (embeddingModel!= null) {
+            solution.setEmbeddingModel(embeddingModel);
+            solution.setEmbeddingModelName(embeddingModel.getName());
+        } else {
+            // Handle the case where embedding model is not found
+            solution.setEmbeddingModel(null);
+            solution.setEmbeddingModelName(null);
+        }
+        
+        return solution;
+    }
+}
+```
+
+### Other Relevant Details:
+- Ensure that the `embeddingModelRepository` is correctly configured and able to fetch data from the database.
+- Add appropriate null checks and error handling to manage cases where data might not be available.
+- Verify the configuration of the API to ensure it is correctly set up to return the required data.
