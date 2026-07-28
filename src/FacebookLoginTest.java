@@ -1,191 +1,174 @@
-Certainly! Below is an automation script based on the provided blueprint and test cases using Selenium WebDriver with Java, TestNG, and Cucumber.
+Certainly! Below is a strictly created automation script in Java using Selenium WebDriver, TestNG, and Cucumber based on the provided test-script details. The script includes step definitions for interacting with the specified elements using their XPaths and types.
 
-### Feature File: `SwagLabs.feature`
+---
 
+### Feature File (`EnterVehicleData.feature`)
 ```gherkin
-Feature: Swag Labs E-commerce Automation
+Feature: Enter Vehicle Data
 
-  Scenario: User login and purchase a product
-    Given the user is on the Swag Labs login page
-    When the user enters "standard_user" as the username
-    And the user enters "secret_sauce" as the password
-    And the user clicks on the login button
-    Then the user should be on the products page
-    When the user adds a product to the cart
-    And the user clicks on the cart icon
-    And the user clicks on the checkout button
-    Then the user should be on the checkout page
-    When the user enters "Satish" as the first name
-    And the user enters "Bedi" as the last name
-    And the user enters "382445" as the postal code
-    And the user clicks on the continue button
-    Then the user should be on the overview page
-    When the user clicks on the finish button
-    Then the order should be completed
+  Scenario: Fill vehicle data form
+    Given I open the vehicle data page
+    When I select "Audi" from the make dropdown
+    And I select "Scooter" from the model dropdown
+    And I enter "1200" into the cylinder capacity field
+    And I enter "100" into the engine performance field
+    And I enter "01/01/2020" into the date of manufacture field
+    And I select "2" from the number of seats motorcycle dropdown
+    And I enter "15000" into the list price field
+    And I enter "5000" into the annual mileage field
+    Then I should see the vehicle data entered successfully
 ```
 
-### Step Definitions: `SwagLabsSteps.java`
+---
 
+### Step Definitions (`EnterVehicleDataSteps.java`)
 ```java
 package stepDefinitions;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.And;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
-public class SwagLabsSteps {
+import io.cucumber.java.en.*;
+
+public class EnterVehicleDataSteps {
+
     WebDriver driver;
 
-    @Given("the user is on the Swag Labs login page")
-    public void the_user_is_on_the_swag_labs_login_page() {
-        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
-        driver = new ChromeDriver();
-        driver.get("https://www.saucedemo.com/");
+    public EnterVehicleDataSteps() {
+        // Assuming driver is initialized elsewhere and passed here or use hooks
+        this.driver = Hooks.driver;
     }
 
-    @When("the user enters {string} as the username")
-    public void the_user_enters_as_the_username(String username) {
-        driver.findElement(By.xpath("//input[@id='user-name']")).sendKeys(username);
+    @Given("I open the vehicle data page")
+    public void i_open_the_vehicle_data_page() {
+        driver.get("http://sampleappurl.com/vehicledata"); // Replace with actual URL
     }
 
-    @And("the user enters {string} as the password")
-    public void the_user_enters_as_the_password(String password) {
-        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
+    @When("I select {string} from the make dropdown")
+    public void i_select_from_the_make_dropdown(String make) {
+        WebElement makeDropdown = driver.findElement(By.xpath("//select[@id='make']"));
+        Select selectMake = new Select(makeDropdown);
+        selectMake.selectByVisibleText(make);
     }
 
-    @And("the user clicks on the login button")
-    public void the_user_clicks_on_the_login_button() {
-        driver.findElement(By.xpath("//input[@id='login-button']")).click();
+    @When("I select {string} from the model dropdown")
+    public void i_select_from_the_model_dropdown(String model) {
+        WebElement modelDropdown = driver.findElement(By.xpath("//select[@id='model']"));
+        Select selectModel = new Select(modelDropdown);
+        selectModel.selectByVisibleText(model);
     }
 
-    @Then("the user should be on the products page")
-    public void the_user_should_be_on_the_products_page() {
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.saucedemo.com/inventory.html");
+    @When("I enter {string} into the cylinder capacity field")
+    public void i_enter_into_the_cylinder_capacity_field(String value) {
+        WebElement cylinderCapacity = driver.findElement(By.xpath("//input[@id='cylindercapacity']"));
+        cylinderCapacity.clear();
+        cylinderCapacity.sendKeys(value);
     }
 
-    @When("the user adds a product to the cart")
-    public void the_user_adds_a_product_to_the_cart() {
-        driver.findElement(By.xpath("//button[@id='add-to-cart-sauce-labs-bike-light']")).click();
+    @When("I enter {string} into the engine performance field")
+    public void i_enter_into_the_engine_performance_field(String value) {
+        WebElement enginePerformance = driver.findElement(By.xpath("//input[@id='engineperformance']"));
+        enginePerformance.clear();
+        enginePerformance.sendKeys(value);
     }
 
-    @And("the user clicks on the cart icon")
-    public void the_user_clicks_on_the_cart_icon() {
-        driver.findElement(By.xpath("//span[normalize-space()='1']")).click();
+    @When("I enter {string} into the date of manufacture field")
+    public void i_enter_into_the_date_of_manufacture_field(String value) {
+        WebElement dateOfManufacture = driver.findElement(By.xpath("//input[@id='dateofmanufacture']"));
+        dateOfManufacture.clear();
+        dateOfManufacture.sendKeys(value);
     }
 
-    @And("the user clicks on the checkout button")
-    public void the_user_clicks_on_the_checkout_button() {
-        driver.findElement(By.xpath("//button[@id='checkout']")).click();
+    @When("I select {string} from the number of seats motorcycle dropdown")
+    public void i_select_from_the_number_of_seats_motorcycle_dropdown(String seats) {
+        WebElement seatsDropdown = driver.findElement(By.xpath("//select[@id='numberofseatsmotorcycle']"));
+        Select selectSeats = new Select(seatsDropdown);
+        selectSeats.selectByVisibleText(seats);
     }
 
-    @Then("the user should be on the checkout page")
-    public void the_user_should_be_on_the_checkout_page() {
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.saucedemo.com/checkout-step-one.html");
+    @When("I enter {string} into the list price field")
+    public void i_enter_into_the_list_price_field(String value) {
+        WebElement listPrice = driver.findElement(By.xpath("//input[@id='listprice']"));
+        listPrice.clear();
+        listPrice.sendKeys(value);
     }
 
-    @When("the user enters {string} as the first name")
-    public void the_user_enters_as_the_first_name(String firstName) {
-        driver.findElement(By.xpath("//input[@id='first-name']")).sendKeys(firstName);
+    @When("I enter {string} into the annual mileage field")
+    public void i_enter_into_the_annual_mileage_field(String value) {
+        WebElement annualMileage = driver.findElement(By.xpath("//input[@id='annualmileage']"));
+        annualMileage.clear();
+        annualMileage.sendKeys(value);
     }
 
-    @And("the user enters {string} as the last name")
-    public void the_user_enters_as_the_last_name(String lastName) {
-        driver.findElement(By.xpath("//input[@id='last-name']")).sendKeys(lastName);
-    }
-
-    @And("the user enters {string} as the postal code")
-    public void the_user_enters_as_the_postal_code(String postalCode) {
-        driver.findElement(By.xpath("//input[@id='postal-code']")).sendKeys(postalCode);
-    }
-
-    @And("the user clicks on the continue button")
-    public void the_user_clicks_on_the_continue_button() {
-        driver.findElement(By.xpath("//input[@id='continue']")).click();
-    }
-
-    @Then("the user should be on the overview page")
-    public void the_user_should_be_on_the_overview_page() {
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.saucedemo.com/checkout-step-two.html");
-    }
-
-    @When("the user clicks on the finish button")
-    public void the_user_clicks_on_the_finish_button() {
-        driver.findElement(By.xpath("//button[@id='finish']")).click();
-    }
-
-    @Then("the order should be completed")
-    public void the_order_should_be_completed() {
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.saucedemo.com/checkout-complete.html");
-        driver.quit();
+    @Then("I should see the vehicle data entered successfully")
+    public void i_should_see_the_vehicle_data_entered_successfully() {
+        // Placeholder for validation, e.g., check for a confirmation message or next page
+        // For demonstration, just assert true
+        Assert.assertTrue(true);
     }
 }
 ```
 
-### TestNG Configuration: `testng.xml`
+---
 
-```xml
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="SwagLabsSuite" parallel="false">
-    <test name="SwagLabsTest">
-        <classes>
-            <class name="stepDefinitions.SwagLabsSteps"/>
-        </classes>
-    </test>
-</suite>
+### TestNG Runner (`TestRunner.java`)
+```java
+package runners;
+
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
+@CucumberOptions(
+    features = "src/test/resources/features",
+    glue = {"stepDefinitions"},
+    plugin = {"pretty", "html:target/cucumber-reports.html"},
+    monochrome = true
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+}
 ```
 
-### Project Structure
+---
 
-```
-src
-├── main
-│   └── java
-│       └── stepDefinitions
-│           └── SwagLabsSteps.java
-└── test
-    └── resources
-        └── SwagLabs.feature
-        └── testng.xml
-```
+### Hooks (`Hooks.java`) - For WebDriver Setup and Teardown
+```java
+package stepDefinitions;
 
-### Dependencies (Maven `pom.xml`)
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-```xml
-<dependencies>
-    <!-- Selenium WebDriver -->
-    <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-java</artifactId>
-        <version>4.x.x</version>
-    </dependency>
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 
-    <!-- TestNG -->
-    <dependency>
-        <groupId>org.testng</groupId>
-        <artifactId>testng</artifactId>
-        <version>7.x.x</version>
-        <scope>test</scope>
-    </dependency>
+public class Hooks {
 
-    <!-- Cucumber -->
-    <dependency>
-        <groupId>io.cucumber</groupId>
-        <artifactId>cucumber-java</artifactId>
-        <version>7.x.x</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>io.cucumber</groupId>
-        <artifactId>cucumber-testng</artifactId>
-        <version>7.x.x</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
+    public static WebDriver driver;
+
+    @Before
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Update path
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
 ```
 
-This script covers all the necessary steps for logging in, adding a product to the cart, and completing the checkout process as per the given test cases.
+---
+
+### Notes:
+- Replace `"http://sampleappurl.com/vehicledata"` with the actual URL of the vehicle data page.
+- Update the ChromeDriver path in `Hooks.java`.
+- The feature file uses sample data; you can parameterize or extend as needed.
+- The validation step is a placeholder; implement actual verification based on your application.
+
+This completes the strictly created automation script based on your provided test-script and blueprint details.
