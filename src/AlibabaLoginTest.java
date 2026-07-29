@@ -1,5 +1,64 @@
-[
-  {
-    "methodName": "loginToToscaAndLogout",
-    "filename": "SampleAutomation.java",
-    "newCode": "import org.openqa.selenium.By;\nimport org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.WebElement;\nimport org.openqa.selenium.chrome.ChromeDriver;\n\npublic class SampleAutomation {\n\n    // methodName: loginToToscaAndLogout\n    public static void loginToToscaAndLogout() {\n        // Set the path to the ChromeDriver executable\n        System.setProperty(\"webdriver.chrome.driver\", \"path/to/chromedriver\");\n\n        WebDriver driver = new ChromeDriver();\n\n        try {\n            // Open the website\n            driver.get(\"https://kairos-capgemini.azurewebsites.net/login\");\n\n            // Click on Your Image\n            WebElement yourImage = driver.findElement(By.xpath(\"//body/app-root[1]/app-login[1]/div[1]/div[2]/div[1]/img[1]\"));\n            yourImage.click();\n\n            // Click on login\n            WebElement loginButton = driver.findElement(By.xpath(\"/html[1]/body[1]/app-root[1]/app-login[1]/div[1]/div[1]/app-header[1]/div[1]/div[1]/nav[1]/a[4]/img[1]\"));\n            loginButton.click();\n\n            // Enter Username\n            WebElement usernameField = driver.findElement(By.xpath(\"//input[@id='username']\"));\n            usernameField.sendKeys(\"shaik-raghiba.sulthana@capgemini-test.com\");\n\n            // Enter Password\n            WebElement passwordField = driver.findElement(By.xpath(\"//input[@id='password']\"));\n            passwordField.sendKeys(\"Test@1234\");\n\n            // Click on Description of the image\n            WebElement descriptionImage = driver.findElement(By.xpath(\"/html[1]/body[1]/div[2]/div[2]/div[1]/mat-dialog-container[1]/div[1]/div[1]/app-login-register-modal[1]/div[1]/div[1]/div[1]/form[1]/div[1]/button[1]/span[2]/img[1]\"));\n            descriptionImage.click();\n\n            // Click on Select Portfolio\n            WebElement selectPortfolio = driver.findElement(By.xpath(\"/html[1]/body[1]/app-root[1]/app-home[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/mat-form-field[1]/div[1]/div[2]/div[1]\"));\n            selectPortfolio.click();\n\n            // Click on option\n            WebElement option = driver.findElement(By.xpath(\"//mat-option[@id='mat-option-4']\"));\n            option.click();\n\n            // Click on combobox\n            WebElement comboBox = driver.findElement(By.xpath(\"/html[1]/body[1]/app-root[1]/app-home[1]/div[2]/div[1]/div[
+Certainly! Below is a sample Java automation script using Selenium WebDriver and TestNG based on the provided blueprint and test cases. The script covers entering the username and password, then clicking the login button on the Swag Labs login page. It assumes you have the necessary dependencies and configurations set up in your project (e.g., Selenium WebDriver, TestNG).
+
+```java
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+public class SwagLabsLoginTest {
+
+    private WebDriver driver;
+
+    @BeforeClass
+    public void setUp() {
+        // Set the path to your chromedriver executable if not set in system PATH
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        // Initialize ChromeDriver
+        driver = new ChromeDriver();
+
+        // Maximize browser window
+        driver.manage().window().maximize();
+
+        // Navigate to Swag Labs login page
+        driver.get("https://www.saucedemo.com/");
+    }
+
+    @Test
+    public void loginTest() {
+        // Locate username field and enter "standard_user"
+        WebElement usernameField = driver.findElement(By.xpath("//input[@id='user-name']"));
+        usernameField.sendKeys("standard_user");
+
+        // Locate password field and enter "secret_sauce"
+        WebElement passwordField = driver.findElement(By.xpath("//input[@id='password']"));
+        passwordField.sendKeys("secret_sauce");
+
+        // Locate login button and click it
+        WebElement loginButton = driver.findElement(By.xpath("//input[@id='login-button']"));
+        loginButton.click();
+
+        // Optionally, add assertions here to verify successful login
+        // For example, check if the URL changed or a certain element is visible
+    }
+
+    @AfterClass
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+```
+
+### Notes:
+- Replace `"path/to/chromedriver"` with the actual path to your ChromeDriver executable or ensure it's in your system PATH.
+- The script uses TestNG annotations for setup (`@BeforeClass`), test execution (`@Test`), and teardown (`@AfterClass`).
+- You can add assertions after clicking the login button to verify the login was successful.
+- This script does not repeat test steps and follows the blueprint instructions.
+
+If you need the script in another language or framework, please let me know!
