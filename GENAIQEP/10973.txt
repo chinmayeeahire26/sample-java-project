@@ -1,0 +1,29 @@
+1) Description on code fix:  
+The provided code snippets are Selenium automation scripts for login functionality and do not contain any logic related to the "Ask AI" feature or handling multiple question submissions. Therefore, the root cause of the "Internal Server Error" on resubmitting the question is not addressed in the given code. The fix would require changes in the backend or frontend code handling the Ask AI question submissions, such as resetting the request state or properly handling multiple requests.
+
+2) Code fix:  
+
+| Without Fix (Given Code)                                                                                         | With Fix (Proposed)                                                                                              |
+|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| ```java                                                                                                         | ```java                                                                                                         |
+| // Selenium login test code                                                                                      | // Selenium login test code                                                                                      |
+| public void loginTest() {                                                                                        | public void loginTest() {                                                                                        |
+|     WebElement usernameField = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_username']"));       |     WebElement usernameField = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_username']"));       |
+|     usernameField.sendKeys("Tester");                                                                           |     usernameField.sendKeys("Tester");                                                                           |
+|                                                                                                                 |                                                                                                                 |
+|     WebElement passwordField = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_password']"));       |     WebElement passwordField = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_password']"));       |
+|     passwordField.sendKeys("test");                                                                              |     passwordField.sendKeys("test");                                                                              |
+|                                                                                                                 |                                                                                                                 |
+|     WebElement loginButton = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_login_button']"));     |     WebElement loginButton = driver.findElement(By.xpath("//input[@id='ctl00_MainContent_login_button']"));     |
+|     loginButton.click();                                                                                         |     loginButton.click();                                                                                         |
+| }                                                                                                               | }                                                                                                               |
+| ```                                                                                                             | ```                                                                                                             |
+|                                                                                                                 | // No relevant code related to Ask AI question submission found in the provided code.                            |
+
+3) Other Relevant details:  
+- The root cause of the Internal Server Error on resubmission likely lies in the backend API or frontend state management for the Ask AI feature, which is not part of the provided code.  
+- To fix the issue, ensure that the backend can handle multiple requests from the same session or reset the frontend request state after each submission.  
+- Additional logging and error handling around the Ask AI submission API calls would help identify the exact failure point.  
+
+Summary:  
+Relevant Code NOT Found
