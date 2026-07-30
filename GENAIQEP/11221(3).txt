@@ -1,0 +1,42 @@
+1) Description on code fix:  
+The fix involves updating the uploadToJiraALM method to explicitly validate the work item ID before proceeding with the upload. If the work item ID is invalid, the snack bar displays the specific message "Please provide the valid work item Id" instead of a generic "Error". The validation logic in isValidWorkItemId is enhanced to check for non-null, non-empty, and pattern matching to ensure the ID format is correct.
+
+---
+
+2) Code fix:
+
+| Code without Fix                                                                                              | Code with Fix                                                                                                  |
+|------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| ```java                                                                                                          | ```java                                                                                                           |
+| // Existing method handling upload to Jira ALM button click                                                     | // Updated method handling upload to Jira ALM button click                                                       |
+| public void uploadToJiraALM(String workItemId) {                                                                | public void uploadToJiraALM(String workItemId) {                                                                 |
+|     try {                                                                                                        |     try {                                                                                                         |
+|         // Upload logic                                                                                          |         // Upload logic                                                                                           |
+|         if (isValidWorkItemId(workItemId)) {                                                                    |         if (isValidWorkItemId(workItemId)) {                                                                     |
+|             // Proceed with upload                                                                               |             // Proceed with upload                                                                                |
+|         } else {                                                                                                 |         } else {                                                                                                  |
+|             showSnackBar("Error");  // Generic error message                                                    | >>>         showSnackBar("Please provide the valid work item Id");  // Specific validation message               |
+|         }                                                                                                       |         }                                                                                                        |
+|     } catch (Exception e) {                                                                                      |     } catch (Exception e) {                                                                                       |
+|         showSnackBar("Error");                                                                                   |         showSnackBar("Error");                                                                                    |
+|     }                                                                                                           |     }                                                                                                            |
+| }                                                                                                               | }                                                                                                                |
+|                                                                                                                  |                                                                                                                 |
+| private boolean isValidWorkItemId(String workItemId) {                                                          | private boolean isValidWorkItemId(String workItemId) {                                                           |
+|     // Possibly missing or incorrect validation logic                                                           |     // Correct validation logic to check if workItemId is valid                                                  |
+|     return workItemId != null && !workItemId.trim().isEmpty();                                                   | >>> return workItemId != null && !workItemId.trim().isEmpty() && workItemId.matches("[A-Za-z0-9-]+");           |
+| }                                                                                                               | }                                                                                                                |
+|                                                                                                                  |                                                                                                                 |
+| private void showSnackBar(String message) {                                                                      | private void showSnackBar(String message) {                                                                       |
+|     // Existing snack bar display logic                                                                          |     // Existing snack bar display logic                                                                           |
+|     snackBar.display(message);                                                                                   |     snackBar.display(message);                                                                                    |
+| }                                                                                                               | }                                                                                                                |
+| ```                                                                                                              | ```                                                                                                              |
+
+---
+
+3) Other Relevant details:  
+- This fix improves user experience by providing a clear and actionable error message for invalid input.  
+- The validation regex `[A-Za-z0-9-]+` can be adjusted based on the exact allowed format of work item IDs in the system.  
+- It is recommended to add unit tests covering invalid and valid work item IDs to prevent regressions.  
+- Verify that any configuration or message mapping in the Jira Zephyr Scale Data Model aligns with this updated error message.
