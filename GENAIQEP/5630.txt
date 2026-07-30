@@ -1,0 +1,111 @@
+1) Description on code fix:  
+The fix addresses the defect where the "Create Organization" feature fails to support international phone numbers due to restrictive validation and inadequate UI support. Based on the root cause analysis, the client-side validation previously used a simple regex that only accepted local 10-digit numbers, excluding valid international formats. The UI input field lacked enhancements such as country code selectors and input masks, which are essential for guiding users in entering international numbers correctly. On the backend, validation was similarly restrictive, rejecting international formats.
+
+The fix replaces the simplistic regex validation with robust parsing and validation using Google's libphonenumber library on both client and server sides. This library supports comprehensive international phone number formats, ensuring valid numbers from any country are accepted. The UI input field is enhanced by integrating a specialized phone number input component that supports international formats, country code selection, and user-friendly placeholders. Error handling is improved to provide clear feedback on invalid inputs.
+
+These changes directly address the root causes by expanding validation coverage, improving user guidance, and ensuring backend acceptance of valid international numbers, thereby resolving the defect.
+
+2) Code fix:  
+
+Existing Code (Client-side validation snippet in CreateOrganizationFormComponent):  
+javascript
+// validatePhoneNumber function using restrictive regex for local numbers only
+function validatePhoneNumber(phoneNumber) {
+  const localPhoneRegex = /^[0-9]{10}$/; // Only 10 digit local numbers allowed
+  return localPhoneRegex.test(phoneNumber);
+}
+
+
+New Code with Fix:  
+javascript
+// Import Google's libphonenumber-js library for robust international phone validation
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
+function validatePhoneNumber(phoneNumber, countryCode) {
+  try {
+    // Parse the phone number with country code context
+    const phoneNumberObj = parsePhoneNumberFromString(phoneNumber, countryCode);
+    // Validate if the number is valid and possible
+    return phoneNumberObj && phoneNumberObj.isValid();
+  } catch (error) {
+    return false; // Invalid phone number format
+  }
+}
+
+
+Existing Code (UI input field rendering):  
+jsx
+<input
+  type="text"
+  name="phoneNumber"
+  value={this.state.phoneNumber}
+  onChange={this.onPhoneNumberInput}
+/>
+
+
+New Code with Fix:  
+jsx
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+
+<PhoneInput
+  international
+  defaultCountry="US"
+  value={this.state.phoneNumber}
+  onChange={this.onPhoneNumberInput}
+  placeholder="Enter phone number with country code"
+/>
+
+
+Existing Code (Backend API validation snippet):  
+java
+public boolean validatePhoneNumber(String phoneNumber) {
+    // Simple regex for 10 digit numbers only
+    return phoneNumber.matches("d{10}");
+}
+
+
+New Code with Fix:  
+java
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
+public boolean validatePhoneNumber(String phoneNumber, String regionCode) {
+    PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+    try {
+        PhoneNumber numberProto = phoneUtil.parse(phoneNumber, regionCode);
+        return phoneUtil.isValidNumber(numberProto);
+    } catch (NumberParseException e) {
+        return false;
+    }
+}
+
+
+Changes Made:  
+- Replaced restrictive regex validation with libphonenumber-based parsing and validation on client and server sides.  
+- Enhanced UI input field by replacing plain text input with a specialized international phone number input component that supports country code selection and formatting.  
+- Added placeholders and styling to guide users in entering international phone numbers.  
+- Updated backend validation to use Google's libphonenumber Java API for robust validation of international numbers.  
+- Added error handling to gracefully handle invalid formats.  
+
+3) Other Relevant details:  
+- Testing recommendations:  
+  - Perform unit tests on the validation functions with a wide range of international phone numbers from different countries and formats.  
+  - Conduct integration testing to ensure the UI input component correctly formats and passes phone numbers to the backend.  
+  - Test form submission with valid and invalid international phone numbers to verify proper error messages and acceptance.  
+  - Include edge cases such as numbers with extensions, varying lengths, and special characters.  
+
+- Configuration changes if needed:  
+  - Add `libphonenumber-js` dependency to the client-side project (`npm install libphonenumber-js`).  
+  - Add Google's libphonenumber Java library to the backend project dependencies (e.g., Maven or Gradle).  
+  - Configure the default country code as per business requirements or allow dynamic selection.  
+
+- Documentation updates:  
+  - Update user-facing documentation or help tooltips to explain how to enter international phone numbers.  
+  - Document the new validation logic and dependencies for developer reference.  
+
+- Other implementation notes:  
+  - Ensure consistent formatting of phone numbers stored in the database (e.g., E.164 format) for uniformity.  
+  - Consider caching or reusing the phone number util instances for performance optimization on the backend.  
+  - Monitor user feedback post-deployment to identify any further UX improvements.
