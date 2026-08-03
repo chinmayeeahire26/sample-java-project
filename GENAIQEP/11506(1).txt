@@ -1,0 +1,94 @@
+1) Description on code fix:  
+The defect arises because the application does not detect or handle the specific error condition when a Zephyr access token expires. This results in no snack bar message being displayed to inform the user, causing confusion and poor UX. The fix addresses this by explicitly detecting the expired token error code (e.g., "EXPIRED_ZEPHYR_TOKEN") in the Zephyr API response handling code. Once detected, the UI layer is triggered to show a clear, user-friendly snack bar message such as "Your Zephyr access token has expired. Please re-authenticate." This resolves the root cause identified in the RCA: missing error detection and missing user feedback. The fix also updates the generic error handling in the upload response handler to map this specific error code to the appropriate message and triggers the snack bar notification accordingly. This ensures consistent, actionable feedback for token expiration events and improves the overall user experience.
+
+2) Code fix:  
+Existing Code:  
+javascript
+// Example snippet from handleUploadResponse function (simplified)
+function handleUploadResponse(response) {
+  if (response.error) {
+    // Generic error handling
+    showSnackBar("An error occurred while uploading.");
+  }
+}
+
+
+typescript
+// Example snippet from ZephyrIntegrationService error handling (hypothetical)
+handleZephyrApiResponse(response) {
+  if (response.error) {
+    // No specific handling for expired token
+    console.error("Zephyr API error:", response.error.message);
+    // No snack bar triggered here
+  }
+}
+
+
+typescript
+// Example snippet from UI Notification Handler
+function showSnackBar(message) {
+  // Shows snack bar with given message
+  // Currently called only with generic messages
+}
+
+
+New Code with Fix:  
+javascript
+// Updated handleUploadResponse function with specific expired token handling
+function handleUploadResponse(response) {
+  if (response.error) {
+    if (response.error.code === "EXPIRED_ZEPHYR_TOKEN") {
+      showSnackBar("Your Zephyr access token has expired. Please re-authenticate."); // <-- Specific message
+      // Additional logic to trigger re-authentication flow can be added here
+    } else {
+      showSnackBar("An error occurred while uploading."); // Generic fallback
+    }
+  }
+}
+
+
+typescript
+// Updated ZephyrIntegrationService error handling to detect expired token and notify UI
+handleZephyrApiResponse(response) {
+  if (response.error) {
+    if (response.error.code === "EXPIRED_ZEPHYR_TOKEN") {
+      console.warn("Zephyr access token expired.");
+      showSnackBar("Your Zephyr access token has expired. Please re-authenticate."); // <-- Snack bar triggered here
+      // Optionally, trigger token refresh or logout flow
+    } else {
+      console.error("Zephyr API error:", response.error.message);
+      // Existing error handling
+    }
+  }
+}
+
+
+typescript
+// UI Notification Handler remains the same but now invoked with specific messages
+function showSnackBar(message) {
+  // Display snack bar with the provided message
+  // No change needed here, but ensure this method is called with specific messages
+}
+
+
+Changes Made:  
+- Added explicit detection of the "EXPIRED_ZEPHYR_TOKEN" error code in Zephyr API response handlers.  
+- Triggered snack bar notification with a clear, user-friendly message upon token expiration detection.  
+- Updated handleUploadResponse to map the expired token error code to the specific message and snack bar invocation.  
+- Added console warnings for better debugging and monitoring of token expiration events.  
+- Left the snack bar display method unchanged but ensured it is invoked with meaningful messages.  
+
+3) Other Relevant details:  
+- Testing recommendations:  
+  - Add unit tests for handleUploadResponse and handleZephyrApiResponse to simulate responses with "EXPIRED_ZEPHYR_TOKEN" error code and verify that the snack bar is shown with the correct message.  
+  - Perform integration/UI tests to confirm that when the Zephyr token expires, the user sees the snack bar notification promptly.  
+  - Test edge cases such as network errors or other Zephyr API errors to ensure generic messages still appear correctly.  
+- Configuration changes if needed:  
+  - Ensure backend consistently returns the "EXPIRED_ZEPHYR_TOKEN" error code for expired tokens to enable reliable detection.  
+- Documentation updates:  
+  - Update developer documentation to include the new error code handling and snack bar message behavior.  
+  - Update user-facing documentation or release notes to inform users about improved feedback on token expiration.  
+- Other implementation notes:  
+  - Consider adding a re-authentication or token refresh flow triggered after showing the snack bar to improve user experience further.  
+  - Monitor production logs for occurrences of expired token errors to assess if further UX improvements are needed.  
+  - Maintain consistent error code usage across all Zephyr API integrations to simplify error handling logic.
