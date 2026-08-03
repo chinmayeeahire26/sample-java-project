@@ -1,0 +1,108 @@
+1) Description on code fix:  
+The defect arises because the current validation logic conflates unsupported file formats with valid file formats that have invalid template structures, leading to a misleading "Unsupported format" error message. To fix this, the validation process in `SpreadsheetUploadValidator.validateFileFormat(File file)` must be refactored to clearly separate file type validation from template structure validation. Specifically, the method should first check if the file extension or MIME type is supported (e.g., csv, xls). If unsupported, it should return an error code indicating "unsupported file format." If supported, it should then validate the template structure and return a distinct error code if the template is invalid.  
+
+The `UploadController.handleUpload(MultipartFile file)` method should be updated to handle these distinct error codes and pass them to the `ErrorMessageService.getErrorMessage(String errorCode)`, which must be enhanced to map these new error codes to clear, user-friendly messages such as "Invalid template format" versus "Unsupported file format." This approach provides users with accurate feedback, improving usability and reducing confusion.  
+
+Additionally, the fix includes adding detailed logging to aid debugging and updating unit tests to cover these scenarios, ensuring robustness and preventing regressions.  
+
+2) Code fix:  
+
+Existing Code:  
+java
+// SpreadsheetUploadValidator.java
+public ValidationResult validateFileFormat(File file) {
+    // Lines 45-70 approx.
+    if (!isTemplateFormat(file)) {
+        return new ValidationResult(false, "ERROR_UNSUPPORTED_FORMAT");
+    }
+    return new ValidationResult(true, null);
+}
+
+// UploadController.java
+public ResponseEntity<?> handleUpload(MultipartFile file) {
+    ValidationResult result = validator.validateFileFormat(file.getFile());
+    if (!result.isValid()) {
+        String errorMessage = errorMessageService.getErrorMessage("ERROR_UNSUPPORTED_FORMAT");
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+    // proceed with upload
+}
+
+// ErrorMessageService.java
+public String getErrorMessage(String errorCode) {
+    if ("ERROR_UNSUPPORTED_FORMAT".equals(errorCode)) {
+        return "Unsupported format.";
+    }
+    return "Unknown error.";
+}
+
+
+New Code with Fix:  
+java
+// SpreadsheetUploadValidator.java
+public ValidationResult validateFileFormat(File file) {
+    // Step 1: Validate file type
+    if (!isSupportedFileType(file)) {
+        return new ValidationResult(false, "ERROR_UNSUPPORTED_FILE_TYPE"); // Changed error code
+    }
+    // Step 2: Validate template structure
+    if (!isValidTemplateFormat(file)) {
+        return new ValidationResult(false, "ERROR_INVALID_TEMPLATE_FORMAT"); // New error code
+    }
+    return new ValidationResult(true, null);
+}
+
+// UploadController.java
+public ResponseEntity<?> handleUpload(MultipartFile file) {
+    ValidationResult result = validator.validateFileFormat(file.getFile());
+    if (!result.isValid()) {
+        String errorCode = result.getErrorCode();
+        String errorMessage = errorMessageService.getErrorMessage(errorCode);
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+    // proceed with upload
+}
+
+// ErrorMessageService.java
+public String getErrorMessage(String errorCode) {
+    switch (errorCode) {
+        case "ERROR_UNSUPPORTED_FILE_TYPE":
+            return "The uploaded file format is not supported. Please upload a CSV or XLS file.";
+        case "ERROR_INVALID_TEMPLATE_FORMAT":
+            return "The uploaded file does not match the required template format. Please use the correct template.";
+        default:
+            return "Unknown error.";
+    }
+}
+
+
+Changes Made:  
+- In `SpreadsheetUploadValidator.validateFileFormat`:  
+  - Added explicit file type validation with `isSupportedFileType(file)` method.  
+  - Separated template format validation into `isValidTemplateFormat(file)`.  
+  - Returned distinct error codes: `"ERROR_UNSUPPORTED_FILE_TYPE"` for unsupported file types and `"ERROR_INVALID_TEMPLATE_FORMAT"` for invalid templates.  
+- In `UploadController.handleUpload`:  
+  - Changed error handling to use the error code from validation result dynamically.  
+  - Passed the error code to `ErrorMessageService` to get specific messages.  
+- In `ErrorMessageService.getErrorMessage`:  
+  - Added new error codes and corresponding user-friendly messages for unsupported file types and invalid templates.  
+  - Replaced generic message with more descriptive ones.  
+
+3) Other Relevant details:  
+- Testing recommendations:  
+  - Add unit tests for `SpreadsheetUploadValidator` to verify:  
+    - Correct detection of unsupported file types (e.g., .txt, .pdf).  
+    - Correct detection of invalid template structure for supported file types (e.g., csv with missing headers).  
+    - Successful validation for correct file types and templates.  
+  - Add integration tests for `UploadController` to verify correct error messages are returned for each failure scenario.  
+- Configuration changes if needed:  
+  - Verify that file type detection logic (`isSupportedFileType`) uses reliable methods such as MIME type checks or file extension validation.  
+  - Ensure template definitions used in `isValidTemplateFormat` are up to date and correctly loaded.  
+- Documentation updates:  
+  - Update user-facing documentation to clarify error messages and upload requirements.  
+  - Document new error codes and their meanings in the codebase for maintainability.  
+- Implementation notes:  
+  - Consider adding detailed logging inside validation methods to record why a file failed validation (unsupported type vs invalid template) for easier debugging.  
+  - Review existing dependencies for file parsing to ensure compatibility with supported formats.  
+
+This fix directly addresses the root cause by separating file type and template validation, providing distinct error codes and messages, thereby improving user experience and maintainability.
