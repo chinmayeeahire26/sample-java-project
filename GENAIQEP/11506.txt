@@ -1,0 +1,33 @@
+Based on the provided Open Bug and RCA, the issue is that the snack bar message is not displayed when the Zephyr access token expires. The root cause is identified as missing or incorrect handling of the expired token event in the code, and possibly some misconfiguration in event triggers or message mappings.
+
+However, the provided code fix and code snippets relate exclusively to preventing duplicate defect creation in the IDTA system and improving Selenium login tests. There is no code related to Zephyr token handling, snack bar display, or token expiry event handling in the provided source code.
+
+---
+
+### 1) Description on code fix:
+
+Relevant Code NOT Found for the Zephyr expired token snack bar issue.  
+The provided code and fixes do not address token expiry detection, event handling, or UI snack bar notification logic related to Zephyr access tokens. Therefore, no direct code fix can be suggested from the given code.
+
+---
+
+### 2) Code fix:
+
+| Existing Code | New Code with Fix |
+|-------------------|----------------------|
+| *No relevant code provided related to Zephyr token expiry or snack bar handling.* | *No relevant code provided related to Zephyr token expiry or snack bar handling.* |
+
+---
+
+### 3) Other Relevant details:
+
+- To fix the snack bar message issue for expired Zephyr access tokens, the code handling API calls to Zephyr should detect HTTP 401 Unauthorized or token expiry responses and trigger a UI event to show the snack bar.
+- Ensure the event listener or interceptor for token expiry is correctly configured to dispatch the snack bar display action with the appropriate message.
+- Verify configuration mappings for token expiry events to snack bar messages are correct and loaded.
+- Add unit and integration tests simulating expired token scenarios to verify snack bar visibility.
+- Review frontend code responsible for authentication token management and UI notification components for missing or incorrect logic.
+
+---
+
+Summary:  
+The provided code and fixes do not contain any logic related to Zephyr token expiry or snack bar notifications. Hence, the fix for the reported bug cannot be derived from the given code. Additional source code related to token management and UI notification handling is required to provide a precise fix.
