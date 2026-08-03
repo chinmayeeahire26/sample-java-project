@@ -1,0 +1,39 @@
+1) Description on code fix:  
+The defect relates to incorrect error validation messages when uploading spreadsheet files that do not conform to the expected template format. The root cause is likely due to the validation logic treating all invalid templates as unsupported formats instead of distinguishing between unsupported file types and incorrect template formats. The fix involves enhancing the validation logic to check the file format first, then validate the template structure, and provide specific error messages accordingly.
+
+2) Code fix:
+
+| Before Fix (Incorrect error message handling) | After Fix (Correct error message handling) |
+|-----------------------------------------------|--------------------------------------------|
+| ```java                                      | ```java                                   |
+| public String validateUploadFile(File file) { | public String validateUploadFile(File file) { |
+|     String extension = getFileExtension(file); |     String extension = getFileExtension(file); |
+|     if (!isSupportedExtension(extension)) {   |     if (!isSupportedExtension(extension)) { |
+|         return "Unsupported format.";         |         return "Unsupported format.";       |
+|     }                                          |     }                                        |
+|                                                |                                              |
+|     // Currently, no separate check for template format |     // Check if file matches expected template format |
+|     if (!isValidTemplate(file)) {               |     if (!isValidTemplate(file)) {             |
+|         return "Unsupported format.";          |         return "Invalid template format. Please upload the correct template."; |
+|     }                                          |     }                                        |
+|                                                |                                              |
+|     return "File is valid.";                    |     return "File is valid.";                  |
+| }                                              | }                                            |
+| ```                                            | ```                                          |
+
+Highlighted Fixes:  
+- Added a distinct error message for invalid template format:  
+  ```java
+  return "Invalid template format. Please upload the correct template.";
+  ```  
+- Changed the second error return from `"Unsupported format."` to the above message to differentiate between unsupported file types and invalid templates.
+
+3) Other Relevant details:  
+- Ensure the `isSupportedExtension()` method correctly identifies allowed file types (e.g., `.csv`, `.xls`, `.xlsx`).  
+- Implement or improve the `isValidTemplate()` method to verify the spreadsheet structure matches the expected template (e.g., required columns, headers).  
+- Update UI or frontend code to display these specific error messages to users for better clarity.  
+
+---
+
+If the actual validation code is not present in the provided snippet or context, the answer would be:  
+Relevant Code NOT Found
