@@ -1,0 +1,134 @@
+1) Description on code fix:  
+The fix addresses the defect where the "Select LLM" dropdown contains non-functional or unsupported LLM options that cause errors during prompt execution. Root cause analysis identified two main issues: configuration problems allowing non-validated LLMs to appear, and code issues involving faulty API integration and insufficient error handling. The fix ensures that the dropdown only displays validated, fully operational LLMs by adding validation logic that filters out non-functional models before they are shown. It also improves the API integration layer by adding robust error handling to detect and handle failures in loading LLM details. Finally, the prompt execution logic is enhanced to gracefully handle errors when an LLM fails to load or execute, providing clear feedback to users and preventing runtime errors. This comprehensive fix directly addresses the root causes by preventing invalid LLMs from appearing, propagating errors properly, and improving user experience with meaningful error messages.
+
+2) Code fix:  
+Relevant Code NOT Found  
+The provided context does not include the actual source code snippets for the relevant methods (`loadAvailableLLMs()`, `populateDropdown()`, `fetchLLMDetails()`, `validateLLM()`, or `executePromptWithLLM()`). Therefore, precise before/after code comparisons cannot be provided. However, based on the RCA and typical implementation patterns, the following illustrative pseudocode outlines the necessary changes:
+
+---
+
+Example Fix for Dropdown Population (UI Component):
+
+*Before (simplified pseudocode):*  
+typescript
+loadAvailableLLMs() {
+  const llms = this.llmService.getAllLLMs(); // returns all configured LLMs
+  this.dropdownOptions = llms; // no filtering or validation
+}
+
+
+*After (with validation and filtering):*  
+typescript
+async loadAvailableLLMs() {
+  const allLLMs = await this.llmService.getAllLLMs();
+  const validatedLLMs = [];
+
+  for (const llm of allLLMs) {
+    try {
+      const isValid = await this.llmService.validateLLM(llm.id);
+      if (isValid) {
+        validatedLLMs.push(llm);
+      }
+    } catch (error) {
+      console.warn(`LLM validation failed for ${llm.id}:`, error);
+      // Optionally log or report error for monitoring
+    }
+  }
+
+  this.dropdownOptions = validatedLLMs; // only include validated LLMs
+}
+
+
+Changes Made:  
+- Added asynchronous validation of each LLM before adding to dropdown.  
+- Filtered out non-functional or unsupported LLMs.  
+- Added error handling during validation to avoid UI crashes.
+
+---
+
+Example Fix for API Integration Layer (LLMService):
+
+*Before (simplified pseudocode):*  
+typescript
+validateLLM(llmId: string): boolean {
+  // Calls external API but does not handle errors properly
+  const response = apiClient.get(`/llm/${llmId}/status`);
+  return response.status === 'operational';
+}
+
+
+*After (with robust error handling):*  
+typescript
+async validateLLM(llmId: string): Promise<boolean> {
+  try {
+    const response = await apiClient.get(`/llm/${llmId}/status`);
+    return response.status === 'operational';
+  } catch (error) {
+    console.error(`Error validating LLM ${llmId}:`, error);
+    return false; // Treat errors as invalid LLM
+  }
+}
+
+
+Changes Made:  
+- Converted to async/await for proper asynchronous handling.  
+- Added try/catch to handle API failures gracefully.  
+- Returned false on error to exclude faulty LLMs.
+
+---
+
+Example Fix for Prompt Execution Handler:
+
+*Before (simplified pseudocode):*  
+typescript
+executePromptWithLLM(llmId: string, prompt: string) {
+  const llm = this.llmService.getLLMById(llmId);
+  const result = llm.runPrompt(prompt); // no error handling
+  return result;
+}
+
+
+*After (with error handling and user feedback):*  
+typescript
+async executePromptWithLLM(llmId: string, prompt: string) {
+  try {
+    const llm = await this.llmService.getLLMById(llmId);
+    if (!llm) {
+      throw new Error('Selected LLM is not available.');
+    }
+    const result = await llm.runPrompt(prompt);
+    return result;
+  } catch (error) {
+    console.error('Prompt execution failed:', error);
+    this.ui.showErrorMessage(`Failed to execute prompt with selected LLM: ${error.message}`);
+    return null; // or appropriate fallback
+  }
+}
+
+
+Changes Made:  
+- Added async/await and try/catch for error handling.  
+- Provided user-friendly error messages on failure.  
+- Prevented unhandled exceptions from crashing the app.
+
+---
+
+3) Other Relevant details:  
+- Testing recommendations:  
+  - Implement automated tests verifying only validated LLMs appear in the dropdown.  
+  - Test API integration with mock LLM status responses including failure scenarios.  
+  - Test prompt execution with both functional and non-functional LLMs to verify error handling and user feedback.  
+  - Perform end-to-end UI tests simulating user selection and prompt execution flows.  
+
+- Configuration changes if needed:  
+  - Maintain a centralized, authoritative configuration or registry of supported LLMs with their operational status.  
+  - Implement periodic health checks or status updates for LLMs to keep the dropdown list current.  
+
+- Documentation updates:  
+  - Document the validation process for LLMs and error handling behavior in the user guide.  
+  - Update developer documentation to reflect the new validation and error handling logic.  
+
+- Implementation notes:  
+  - Consider caching validation results to reduce latency and API calls.  
+  - Provide fallback UI states (e.g., disable dropdown or show "No available LLMs" message) if no LLMs are validated.  
+  - Log validation and execution errors for monitoring and proactive maintenance.
