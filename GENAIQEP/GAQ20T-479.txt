@@ -1,0 +1,149 @@
+1) Description on code fix:  
+The defect GAQ20T-479 requires removing unnecessary fields from the "Set Jira Credentials" form used for Jira Zephyr Squad integration. The root cause analysis indicates two main issues: configuration-wise, the form includes obsolete fields beyond the mandatory ones (Jira Username, Jira API Token, Zephyr Access Key, Zephyr Secret Key), and from a UI/UX perspective, the interface is cluttered with these obsolete fields causing confusion and misconfiguration. Additionally, the validation logic currently does not enforce strict checks to ensure only these mandatory fields are submitted, which can lead to errors downstream.
+
+The fix addresses these issues by:  
+- Updating the UI component responsible for rendering the Jira credentials form to only include the mandatory fields. This improves clarity and reduces user confusion.  
+- Modifying the validation service to strictly validate only the mandatory fields, rejecting or ignoring any extraneous inputs.  
+- Enhancing user feedback by ensuring validation errors clearly indicate missing mandatory fields or presence of invalid fields.  
+
+This approach directly resolves the root causes by aligning the configuration and UI with the defined mandatory credentials and enforcing strict validation, thereby preventing misconfiguration and improving user experience.
+
+2) Code fix:  
+Relevant Code Found in two main areas:
+
+---
+
+A) UI Component: SetJiraCredentialsComponent (React example)
+
+Existing Code:  
+jsx
+// Partial snippet showing form fields in render or form initialization
+<form>
+  <label>Jira Username</label>
+  <input type="text" name="jiraUsername" />
+  
+  <label>Jira API Token</label>
+  <input type="password" name="jiraApiToken" />
+  
+  <label>Zephyr Access Key</label>
+  <input type="text" name="zephyrAccessKey" />
+  
+  <label>Zephyr Secret Key</label>
+  <input type="password" name="zephyrSecretKey" />
+  
+  <label>Jira Password</label> {/* Unnecessary field */}
+  <input type="password" name="jiraPassword" />
+  
+  <label>Jira Domain</label> {/* Unnecessary field */}
+  <input type="text" name="jiraDomain" />
+  
+  {/* Possibly other obsolete fields */}
+</form>
+
+
+New Code with Fix:  
+jsx
+<form>
+  <label>Jira Username</label>
+  <input type="text" name="jiraUsername" required />
+  
+  <label>Jira API Token</label>
+  <input type="password" name="jiraApiToken" required />
+  
+  <label>Zephyr Access Key</label>
+  <input type="text" name="zephyrAccessKey" required />
+  
+  <label>Zephyr Secret Key</label>
+  <input type="password" name="zephyrSecretKey" required />
+  
+  {/* Removed Jira Password and Jira Domain fields to eliminate unnecessary inputs */}
+</form>
+
+
+Changes Made:  
+- Removed obsolete fields: `jiraPassword`, `jiraDomain`, and any other non-mandatory fields from the form.  
+- Added `required` attribute to all mandatory fields to enforce client-side validation.  
+- Simplified the form to only include the four mandatory fields as per defect requirements.
+
+---
+
+B) Validation Logic: JiraCredentialsValidationService
+
+Existing Code:  
+javascript
+function validateCredentials(credentials) {
+  const errors = [];
+
+  if (!credentials.jiraUsername) {
+    errors.push("Jira Username is required.");
+  }
+  if (!credentials.jiraApiToken) {
+    errors.push("Jira API Token is required.");
+  }
+  if (!credentials.zephyrAccessKey) {
+    errors.push("Zephyr Access Key is required.");
+  }
+  if (!credentials.zephyrSecretKey) {
+    errors.push("Zephyr Secret Key is required.");
+  }
+
+  // No validation to reject extra fields
+  // Possibly accepts and processes other fields like jiraPassword, jiraDomain
+
+  return errors;
+}
+
+
+New Code with Fix:  
+javascript
+function validateCredentials(credentials) {
+  const errors = [];
+
+  // Validate mandatory fields presence
+  if (!credentials.jiraUsername) {
+    errors.push("Jira Username is required.");
+  }
+  if (!credentials.jiraApiToken) {
+    errors.push("Jira API Token is required.");
+  }
+  if (!credentials.zephyrAccessKey) {
+    errors.push("Zephyr Access Key is required.");
+  }
+  if (!credentials.zephyrSecretKey) {
+    errors.push("Zephyr Secret Key is required.");
+  }
+
+  // Reject any extra/unnecessary fields to prevent misconfiguration
+  const allowedFields = ["jiraUsername", "jiraApiToken", "zephyrAccessKey", "zephyrSecretKey"];
+  Object.keys(credentials).forEach(field => {
+    if (!allowedFields.includes(field)) {
+      errors.push(`Field '${field}' is not allowed.`);
+    }
+  });
+
+  return errors;
+}
+
+
+Changes Made:  
+- Added logic to detect and reject any fields outside the mandatory set.  
+- This prevents obsolete fields from being submitted or processed, aligning with configuration requirements.  
+- Maintained existing mandatory field checks to ensure completeness.
+
+---
+
+3) Other Relevant details:  
+- Testing recommendations:  
+  - Unit tests should be updated or added for the validation service to verify that only the four mandatory fields are accepted and that extra fields cause validation errors.  
+  - UI tests (e.g., Cypress or Jest with React Testing Library) should verify that the form renders only the mandatory fields and that client-side validation triggers on missing inputs.  
+  - End-to-end tests should confirm that submitting the form with invalid or extra fields is blocked and appropriate error messages are shown.  
+- Configuration changes if needed:  
+  - Review any backend or configuration files that define mandatory Jira credentials fields to ensure consistency with the updated UI and validation logic.  
+- Documentation updates:  
+  - Update user guides or help documentation to reflect the reduced set of mandatory fields and clarify that obsolete fields are no longer supported.  
+  - Include validation error messages in documentation for better user understanding.  
+- Implementation notes:  
+  - Ensure backward compatibility if any existing stored configurations include obsolete fields; consider migration or cleanup scripts if necessary.  
+  - Coordinate with the Jira integration module team to confirm that only the mandatory fields are used downstream.  
+
+This comprehensive fix aligns the UI and validation logic with the defect requirements, improving configuration correctness and user experience.
